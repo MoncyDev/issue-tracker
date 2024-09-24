@@ -3,16 +3,8 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { issueSchema } from "@/app/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Issue } from "@prisma/client";
-import {
-  Box,
-  Button,
-  Callout,
-  RadioCards,
-  SegmentedControl,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Issue, Status } from "@prisma/client";
+import { Button, Callout, Select, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -20,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { statusMap } from "@/app/components/IssueStatusBadge";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -42,13 +35,19 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
+      if (issue) {
+        await axios.patch("/api/issues/" + issue.id, data);
+      } else {
+        await axios.post("/api/issues", data);
+      }
       router.push("/issues");
     } catch (error) {
       setSubmitting(false);
       setError("An error occured.");
     }
   });
+
+  const [status, setStatus] = useState(issue?.status as string);
 
   return (
     <div className="max-w-md ">
@@ -66,25 +65,25 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
 
         {issue && (
-          <Box>
-            <SegmentedControl.Root
-              defaultValue={issue.status}
-              size="3"
-              radius="full"
-            >
-              <SegmentedControl.Item value="OPEN">
-                <Text color="red">Open</Text>
-              </SegmentedControl.Item>
-              <SegmentedControl.Item value="IN_PROGRESS">
-                <Text color="violet">In Progress</Text>
-              </SegmentedControl.Item>
-              <SegmentedControl.Item value="CLOSED">
-                <Text color="green">Closed</Text>
-              </SegmentedControl.Item>
-            </SegmentedControl.Root>
-          </Box>
+          <Select.Root
+            defaultValue={issue.status}
+            size="3"
+            onValueChange={setStatus}
+          >
+            <Select.Trigger
+              {...register("status")}
+              value={status}
+              color={statusMap[status as Status].color}
+              variant="soft"
+            />
+            <Select.Content>
+              <Select.Item value="OPEN">Open</Select.Item>
+              <Select.Item value="IN_PROGRESS">In Progress</Select.Item>
+              <Select.Item value="CLOSED">Closed</Select.Item>
+            </Select.Content>
+          </Select.Root>
         )}
-
+        <ErrorMessage>{errors.status?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -99,8 +98,9 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button disabled={isSubmitting}>
-          Submit New Issue {isSubmitting && <Spinner />}
+        <Button disabled={isSubmitting} type="submit">
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
     </div>
