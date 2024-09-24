@@ -12,8 +12,7 @@ const inter = Inter({
 });
 const css = `.radix-themes {
   --default-font-family: var(--font-inter);
-}
-`;
+}`;
 
 export const metadata: Metadata = {
   title: "Create Next App",
