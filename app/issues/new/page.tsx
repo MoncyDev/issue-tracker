@@ -18,7 +18,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 
 type IssueForm = z.infer<typeof issueSchema>;
 
-const NewIssuePage = async () => {
+const NewIssuePage = () => {
   const router = useRouter();
   const {
     register,
