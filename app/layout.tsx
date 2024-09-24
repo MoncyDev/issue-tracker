@@ -1,9 +1,8 @@
 import "@radix-ui/themes/styles.css";
 import "./globals.css";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { Inter } from "next/font/google";
-import { Theme, ThemePanel } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 import NavBar from "./NavBar";
 
 const inter = Inter({
@@ -15,17 +14,6 @@ const css = `.radix-themes {
   --default-font-family: var(--font-inter);
 }
 `;
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",

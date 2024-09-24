@@ -1,38 +1,77 @@
 "use client";
-import { Button, TextField } from "@radix-ui/themes";
-import SimpleMDE from "react-simplemde-editor";
+import { Button, Callout, TextField, Text } from "@radix-ui/themes";
+import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { issueSchema } from "@/app/validationSchema";
+import { z } from "zod";
 
-interface IssueForm {
-  title: string;
-  description: string;
-}
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
+
+type IssueForm = z.infer<typeof issueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
-  const { register, control, handleSubmit } = useForm<IssueForm>();
-  return (
-    <form
-      className="max-w-md space-y-3"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/issues", data);
-        router.push("/issues");
-      })}
-    >
-      <TextField.Root placeholder="Title" {...register("title")} />
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => (
-          <SimpleMDE placeholder="Enter description" {...field} />
-        )}
-      />
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(issueSchema),
+  });
+  const [error, setError] = useState("");
 
-      <Button>Submit New Issue</Button>
-    </form>
+  return (
+    <div className="max-w-md ">
+      {error && (
+        <Callout.Root color="red" className="mb-3">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      <form
+        className="space-y-3"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post("/api/issues", data);
+            router.push("/issues");
+          } catch (error) {
+            setError("An error occured.");
+          }
+        })}
+      >
+        <TextField.Root placeholder="Title" {...register("title")} />
+        {errors.title && (
+          <Text color="red" as="p">
+            {errors.title.message}
+          </Text>
+        )}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <SimpleMDE
+              placeholder="Enter description"
+              onChange={onChange}
+              value={value}
+            />
+          )}
+        />
+        {errors.description && (
+          <Text color="red" as="p">
+            {errors.description.message}
+          </Text>
+        )}
+
+        <Button>Submit New Issue</Button>
+      </form>
+    </div>
   );
 };
 
