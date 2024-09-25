@@ -32,9 +32,9 @@ export default function RootLayout({
           <style>{css}</style>
           <Theme accentColor="violet">
             <NavBar />
-            <Container>
-              <main className="p-5">{children}</main>
-            </Container>
+            <main className="p-5">
+              <Container>{children}</Container>
+            </main>
             {/* <ThemePanel /> */}
           </Theme>
         </AuthProvider>
