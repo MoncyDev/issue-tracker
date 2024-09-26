@@ -15,15 +15,12 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const options: ToastOptions = { position: "bottom-right" };
 
   async function assignIssue(userId: string | null) {
-    if (userId === "none") {
-      userId = "";
-    }
     const toastLoad = toast.loading("Assigning issue to user...", options);
     try {
       await axios.patch("/api/issues/" + issue.id, {
-        assignedToUserId: userId || null,
+        assignedToUserId: userId === "none" ? null : userId,
       });
-      if (userId)
+      if (userId !== "none")
         toast.success("Issue successfully assigned to user.", options);
       else toast.success("Unassigned", options);
       toast.dismiss(toastLoad);
