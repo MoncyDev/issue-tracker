@@ -3,28 +3,18 @@ import { Skeleton } from "@/app/components";
 import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import toast, { Toaster, ToastOptions } from "react-hot-toast";
 import axios from "axios";
+import toast, { Toaster, ToastOptions } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000,
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
 
   if (isLoading) return <Skeleton height="2rem" />;
-
   if (error) return null;
 
   const options: ToastOptions = { position: "bottom-right" };
 
-  async function assignUser(userId: string | null) {
+  async function assignIssue(userId: string | null) {
     if (userId === "none") {
       userId = "";
     }
@@ -47,10 +37,9 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     <>
       <Select.Root
         defaultValue={issue.assignedToUserId || "none"}
-        onValueChange={(userId) => assignUser(userId)}
+        onValueChange={(userId) => assignIssue(userId)}
       >
         <Select.Trigger placeholder="Assign..." />
-
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestions</Select.Label>
@@ -67,5 +56,13 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     </>
   );
 };
+
+const useUsers = () =>
+  useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
 
 export default AssigneeSelect;
