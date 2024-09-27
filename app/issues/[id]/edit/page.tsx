@@ -4,6 +4,7 @@ import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import IssueFormSkeleton from "../../_components/IssueFormSkeleton";
 import { Heading } from "@radix-ui/themes";
+import { Metadata } from "next";
 
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
   ssr: false,
@@ -26,6 +27,11 @@ const EditIssuePage = async ({ params }: Props) => {
       <IssueForm issue={issue} />
     </>
   );
+};
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Edit issue",
+  description: "Edit project issues",
 };
 
 export default EditIssuePage;

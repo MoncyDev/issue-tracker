@@ -1,16 +1,6 @@
 import prisma from "@/prisma/client";
-import {
-  Avatar,
-  Box,
-  Card,
-  Flex,
-  Heading,
-  HoverCard,
-  Table,
-  Text,
-} from "@radix-ui/themes";
+import { Card, Flex, Heading, Table } from "@radix-ui/themes";
 import Link from "next/link";
-import React from "react";
 import { IssueStatusBadge } from "./components";
 import AvatarHoverCard from "./components/AvatarHoverCard";
 
@@ -43,7 +33,10 @@ const LatestIssues = async () => {
                     <IssueStatusBadge status={issue.status} />
                   </Flex>
                   {issue.assignedToUser && (
-                    <AvatarHoverCard assignedToUser={issue.assignedToUser} updatedAt={issue.updatedAt}/>
+                    <AvatarHoverCard
+                      assignedToUser={issue.assignedToUser}
+                      updatedAt={issue.updatedAt}
+                    />
                   )}
                 </Flex>
               </Table.Cell>

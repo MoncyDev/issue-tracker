@@ -1,17 +1,7 @@
 "use client";
-import { Issue, User } from "@prisma/client";
-import React, { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Card,
-  Flex,
-  Heading,
-  HoverCard,
-  Table,
-  Text,
-} from "@radix-ui/themes";
-import { set } from "zod";
+import { User } from "@prisma/client";
+import { Avatar, Box, Flex, Heading, HoverCard, Text } from "@radix-ui/themes";
+import { useState } from "react";
 
 interface Props {
   assignedToUser: User;
