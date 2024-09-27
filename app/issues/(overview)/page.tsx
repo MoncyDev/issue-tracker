@@ -1,12 +1,12 @@
 import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
+import { Flex, Table } from "@radix-ui/themes";
 import { IssueStatusBadge, Link } from "@/app/components";
 import IssueActions from "../IssueActions";
 import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 
-export interface searchParams {
+interface searchParams {
   searchParams: { status: Status; orderBy: keyof Issue; order: string };
 }
 
@@ -53,7 +53,10 @@ const IssuesPage = async ({ searchParams }: searchParams) => {
                   : "desc"
                 : undefined;
               return (
-                <Table.ColumnHeaderCell key={column.value}>
+                <Table.ColumnHeaderCell
+                  key={column.value}
+                  className={column.className}
+                >
                   <NextLink
                     href={{
                       query: { ...searchParams, orderBy: column.value, order },
@@ -76,16 +79,23 @@ const IssuesPage = async ({ searchParams }: searchParams) => {
           {issues.map((issue) => (
             <Table.Row key={issue.id}>
               <Table.Cell>
-                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-                <div className="block md:hidden">
-                  <IssueStatusBadge status={issue.status} />
-                </div>
+                <Flex justify="between" className="w-full">
+                  <div>
+                    <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                    <div className="block mt-2 md:hidden">
+                      <IssueStatusBadge status={issue.status} />
+                    </div>
+                  </div>
+                  <div className="text-gray-500 md:hidden">
+                    {issue.createdAt.toLocaleDateString()}
+                  </div>
+                </Flex>
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
                 <IssueStatusBadge status={issue.status} />
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
-                {issue.createdAt.toDateString()}
+                {issue.createdAt.toLocaleDateString()}
               </Table.Cell>
             </Table.Row>
           ))}
