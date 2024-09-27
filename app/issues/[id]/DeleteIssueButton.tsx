@@ -19,6 +19,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     } catch (error) {
       setDeleting(false);
       setError(true);
+      console.error(error)
     }
   };
   return (

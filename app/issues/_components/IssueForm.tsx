@@ -41,6 +41,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     } catch (error) {
       setSubmitting(false);
       setError("An error occured.");
+      console.error(error);
     }
   });
 

@@ -27,6 +27,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     } catch (error) {
       toast.error("Unable to assign issue. Try again!", options);
       toast.dismiss(toastLoad);
+      console.error(error);
     }
   }
 
