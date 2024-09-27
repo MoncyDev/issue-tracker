@@ -6,11 +6,11 @@ import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 
-interface searchParams {
+interface Props {
   searchParams: { status: Status; orderBy: keyof Issue; order: string };
 }
 
-const IssuesPage = async ({ searchParams }: searchParams) => {
+const IssuesPage = async ({ searchParams }: Props) => {
   const columns: {
     label: string;
     value: keyof Issue;
