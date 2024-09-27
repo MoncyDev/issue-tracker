@@ -2,7 +2,7 @@ import { Issue, Status } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { Flex, Table } from "@radix-ui/themes";
 import Link from "next/link";
-import { IssueStatusBadge } from "../components";
+import { IssueStatusBadge } from "../../components";
 
 export interface IssueQuery {
   status: Status;
@@ -57,7 +57,12 @@ const IssueTable = ({ searchParams, issues }: Props) => {
             <Table.Cell>
               <Flex justify="between" className="w-full">
                 <div>
-                  <Link href={`/issues/${issue.id}`} className="hover:text-blue-800 hover:underline">{issue.title}</Link>
+                  <Link
+                    href={`/issues/${issue.id}`}
+                    className="hover:text-blue-800 hover:underline"
+                  >
+                    {issue.title}
+                  </Link>
                   <div className="block mt-2 md:hidden">
                     <IssueStatusBadge status={issue.status} />
                   </div>
