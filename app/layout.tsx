@@ -34,7 +34,7 @@ export default function RootLayout({
             <style>{css}</style>
             <Theme accentColor="violet">
               <NavBar />
-              <main className="p-5">
+              <main className="p-5 md:mt-16">
                 <Container>{children}</Container>
               </main>
               {/* <ThemePanel /> */}

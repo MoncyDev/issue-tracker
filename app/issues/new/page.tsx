@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import IssueFormSkeleton from "../_components/IssueFormSkeleton";
+import { Heading } from "@radix-ui/themes";
 
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
   ssr: false,
@@ -7,7 +8,12 @@ const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
 });
 
 const NewIssuePage = () => {
-  return <IssueForm />;
+  return (
+    <>
+    <Heading mb='4'>Add Issue</Heading>
+      <IssueForm />
+    </>
+  );
 };
 
 export default NewIssuePage;

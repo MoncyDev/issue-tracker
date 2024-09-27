@@ -1,8 +1,18 @@
 import prisma from "@/prisma/client";
-import { Avatar, Card, Flex, Heading, Table } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Card,
+  Flex,
+  Heading,
+  HoverCard,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
 import { IssueStatusBadge } from "./components";
+import AvatarHoverCard from "./components/AvatarHoverCard";
 
 const LatestIssues = async () => {
   const issues = await prisma.issue.findMany({
@@ -20,20 +30,20 @@ const LatestIssues = async () => {
       <Table.Root>
         <Table.Body>
           {issues.map((issue) => (
-            <Table.Row key={issue.id}>
+            <Table.Row key={issue.id} className="hover:bg-gray-100">
               <Table.Cell>
                 <Flex justify="between">
                   <Flex direction="column" align="start" gap="2">
-                    <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                    <Link
+                      href={`/issues/${issue.id}`}
+                      className="hover:text-blue-800 hover:underline"
+                    >
+                      {issue.title}
+                    </Link>
                     <IssueStatusBadge status={issue.status} />
                   </Flex>
                   {issue.assignedToUser && (
-                    <Avatar
-                      src={issue.assignedToUser.image!}
-                      fallback="?"
-                      radius="full"
-                      size="2"
-                    />
+                    <AvatarHoverCard assignedToUser={issue.assignedToUser} updatedAt={issue.updatedAt}/>
                   )}
                 </Flex>
               </Table.Cell>
